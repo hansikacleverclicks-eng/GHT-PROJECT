@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -s http://localhost/backend/api/get_hotels.php)",
+      "Bash(curl -s https://globalhotelsandtourism.com/backend/api/get_hotels.php)",
+      "Bash(npm list *)"
+    ]
+  }
+}

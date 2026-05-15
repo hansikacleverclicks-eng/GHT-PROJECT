@@ -1,6 +1,5 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 
-import Header from './components/shared/Header';
 import Footer from './components/Footer';
 import Index from './pages/Index';
 import AllHotels from './pages/AllHotels';
@@ -35,7 +34,6 @@ import About from './pages/About';
 import SecondTopHeader from './components/SecondTopHeader';
 import SecondNavBar from './components/SecondNavBar';
 
-
 function ProtectedRoute({ children }: { children: JSX.Element }) {
   const { authenticated, loading } = useAuth();
   if (loading) return <div className="p-10 text-center">Loading...</div>;
@@ -43,14 +41,20 @@ function ProtectedRoute({ children }: { children: JSX.Element }) {
 }
 
 function AppContent() {
+  const location = useLocation();
+  const isAdminRoute = location.pathname.startsWith('/admin');
+
   return (
     <div className="flex flex-col min-h-screen">
       <DynamicSEO />
-      {/* <Header /> */}
-  <JoinPopup />
-        <SecondTopHeader />
+      {!isAdminRoute && (
+        <>
+          <JoinPopup />
+          <SecondTopHeader />
           <SecondNavBar />
-  <main className="flex-grow ">
+        </>
+      )}
+      <main className={isAdminRoute ? '' : 'flex-grow'}>
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/hotels" element={<AllHotels />} />
@@ -81,8 +85,7 @@ function AppContent() {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
-
-  <Footer />
+      {!isAdminRoute && <Footer />}
     </div>
   );
 }

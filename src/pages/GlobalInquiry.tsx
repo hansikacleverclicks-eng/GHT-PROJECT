@@ -19,9 +19,34 @@ const GlobalInquiry = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [submitting, setSubmitting] = useState(false)
+  const [submitted, setSubmitted] = useState(false)
+  const [submitError, setSubmitError] = useState('')
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    console.log(formData)
+    setSubmitting(true)
+    setSubmitError('')
+    try {
+      const API = import.meta.env.MODE === 'development'
+        ? 'https://globalhotelsandtourism.com/backend/api/inquiries.php'
+        : '/backend/api/inquiries.php'
+      const res = await fetch(API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      })
+      const data = await res.json()
+      if (data.success) {
+        setSubmitted(true)
+        setFormData({ name: '', email: '', address: '', numberOfGuests: '', attending: '', mealPreferences: '' })
+      } else {
+        setSubmitError(data.error || 'Submission failed. Please try again.')
+      }
+    } catch {
+      setSubmitError('Network error. Please try again.')
+    }
+    setSubmitting(false)
   }
 
   return (
@@ -393,9 +418,15 @@ const GlobalInquiry = () => {
                   <span className="gi-bar" />
                 </div>
 
+                {submitError && (
+                  <p style={{ color: '#c0392b', fontSize: '12px', textAlign: 'center', marginTop: '8px' }}>{submitError}</p>
+                )}
+                {submitted && (
+                  <p style={{ color: '#27ae60', fontSize: '12px', textAlign: 'center', marginTop: '8px' }}>Thank you! Your inquiry has been sent.</p>
+                )}
                 <div className="gi-submit-wrap">
-                  <button type="submit" className="gi-submit">
-                    Send An Inquiry
+                  <button type="submit" disabled={submitting} className="gi-submit">
+                    {submitting ? 'Sending...' : 'Send An Inquiry'}
                   </button>
                 </div>
 

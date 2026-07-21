@@ -1,6 +1,4 @@
-﻿
-
-import { useState, useEffect, useRef, useCallback } from 'react';
+﻿import { useState, useEffect, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { Star, ArrowRight, Hotel as HotelIcon, Users, Lightbulb, Award, UserPlus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -27,7 +25,8 @@ import SecondTopHeader from '@/components/SecondTopHeader';
 import SecondNavBar from '@/components/SecondNavBar';
 import SecondHeroBanner from '@/components/SecondHeroBanner';
 import FeaturedPartners from '@/components/FeaturedPartners';
-import  hotelVideo from '../assets/video.mp4'
+import Testimonials from '@/components/Testimonials';
+import hotelVideo from '../assets/video.mp4'
 
 // Add custom CSS for search dropdown layering
 const searchDropdownStyle = `
@@ -50,7 +49,7 @@ const searchDropdownStyle = `
 
   @media (min-width: 768px) {
     .hero-search {
-      max-width: 42rem; /* max-w-2xl equivalent */
+      max-width: 42rem;
       padding: 0;
     }
   }
@@ -67,27 +66,24 @@ const searchDropdownStyle = `
     margin-top: 0.5rem !important;
     margin-left: auto !important;
     margin-right: auto !important;
-    max-height: 80vh !important; /* Limit height on mobile */
+    max-height: 80vh !important;
     overflow-y: auto !important;
   }
 
-  /* Ensure dropdown doesn't overflow screen edges on mobile */
   @media (max-width: 767px) {
     .hero-search [data-search-dropdown] {
-      width: calc(100% - 2rem) !important; /* Account for padding */
+      width: calc(100% - 2rem) !important;
       left: 1rem !important;
       right: 1rem !important;
     }
   }
 
-  /* Lower sections should have lower z-index */
   .destinations-section {
     position: relative;
     z-index: 10;
   }
 `
 
-// Updated cities array for "Explore Premier Destinations" section
 const cities = [
   { name: 'New Delhi', slug: 'new-delhi', description: 'Capital of hospitality and grandeur', image: '/city-images/delhi.jpg' },
   { name: 'Uttarakhand', slug: 'uttarakhand', description: 'The Land of Gods and serene mountains', image: '/city-images/uttarakhand.jpg' },
@@ -116,43 +112,6 @@ const categories = [
   { name: 'Event Planners', icon: '📋', count: '150+' },
 ]
 
-const featuredVendors = [
-  {
-    id: 1,
-    name: 'Royal Palace Resort',
-    city: 'Jaipur',
-    category: 'Resort',
-    rating: 4.8,
-    badge: 'Pinnacle',
-    image: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=1200&auto=format&fit=crop',
-    priceRange: '₹15,000 - ₹50,000',
-    capacity: '200-500 guests',
-  },
-  {
-    id: 2,
-    name: 'Taj Heritage Banquets',
-    city: 'Delhi',
-    category: 'Banquet Hall',
-    rating: 4.9,
-    badge: 'Excellence',
-    image: 'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=1200&auto=format&fit=crop',
-    priceRange: '₹8,000 - ₹25,000',
-    capacity: '100-300 guests',
-  },
-  {
-    id: 3,
-    name: 'Lake View Palace',
-    city: 'Udaipur',
-    category: 'Destination Venue',
-    rating: 4.7,
-    badge: 'Distinction',
-    image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?q=80&w=1200&auto=format&fit=crop',
-    priceRange: '₹20,000 - ₹75,000',
-    capacity: '150-400 guests',
-  },
-]
-
-// Add SearchResult type
 type SearchResult =
   | { type: 'Hotel'; label: string; description: string; image: string; link: string; hotel: Hotel }
   | { type: 'Vendor'; label: string; description: string; link: string; vendor: Vendor }
@@ -189,28 +148,6 @@ export default function Index() {
   const [vendors, setVendors] = useState<Vendor[]>([])
   const [activeVideo, setActiveVideo] = useState('/hospitality.mp4');
 
-  const partners = [
-    {
-      name: "The Wedding Rose",
-      logo: "/logos/weddingrose.png",
-      location: "New Delhi",
-      contactPerson: "Monica Dhyani",
-      phone: "8076885774",
-      email: "wedding16roses@gmail.com",
-      website: "Visit Website →"
-    },
-    {
-      name: "Danish Patisserie",
-      logo: "/logos/danis.jpg",
-      location: "New Delhi",
-      contactPerson: "Monica Dhyani",
-      phone: "8076885774",
-      email: "wedding16roses@gmail.com",
-      website: "danishpatisserie.in"
-    }
-  ];
-
-  // Helper to check if an image URL actually loads (runs in browser)
   const checkImage = useCallback((url: string, timeout = 3000): Promise<boolean> => {
     return new Promise((resolve) => {
       if (!url) return resolve(false)
@@ -233,7 +170,6 @@ export default function Index() {
     })
   }, [])
 
-  // Fetch vendors on mount
   useEffect(() => {
     async function loadVendors() {
       const v = await fetchVendors()
@@ -248,10 +184,8 @@ export default function Index() {
       try {
         const allHotels = await fetchHotels()
         setAllHotels(allHotels)
-        // Filter out hotels with empty Hero Image first
         const candidates = allHotels.filter(h => h['Hero Image'] && String(h['Hero Image']).trim())
 
-        // Validate images by attempting to load them (browser Image) and build imageBackedHotels
         const validation = await Promise.all(candidates.map(async (h) => {
           const ok = await checkImage(h['Hero Image'])
           return ok ? h : null
@@ -259,7 +193,6 @@ export default function Index() {
         const validated = validation.filter(Boolean) as Hotel[]
 
         setImageBackedHotels(validated)
-        // Shuffle and pick up to 7 for featured
         const shuffled = validated.sort(() => 0.5 - Math.random())
         setFeaturedHotels(shuffled.slice(0, 7))
       } catch (error) {
@@ -269,17 +202,13 @@ export default function Index() {
     loadFeaturedHotels()
   }, [checkImage])
 
-  // Popular Picks carousel logic
   useEffect(() => {
-    // Only cycle through hotels that have images
     const popularHotels = allHotels.filter(h => h['Hero Image'] && String(h['Hero Image']).trim())
     if (carouselInterval.current) clearInterval(carouselInterval.current)
     if (popularHotels.length === 0) {
-      // nothing to cycle
       setPopularIndex(0)
       return
     }
-    // Ensure popularIndex stays in-range when popularHotels length changes
     setPopularIndex((prev) => prev % popularHotels.length)
 
     carouselInterval.current = setInterval(() => {
@@ -299,7 +228,7 @@ export default function Index() {
     setModalHotel(null)
   }
 
-  const handleVideoChange = (option) => {
+  const handleVideoChange = (option: string) => {
     switch (option) {
       case 'hotels':
         setActiveVideo('/hospitality.mp4');
@@ -315,22 +244,18 @@ export default function Index() {
     }
   };
 
-  // Featured Vendor Card for 'The Wedding Rose'
   const featuredVendor = vendors.find(v => v.vendorName.trim().toLowerCase() === 'the wedding rose'.toLowerCase());
 
   return (
     <>
-      {/* Only inject JSON-LD schema — title/meta come from global DynamicSEO in App.tsx */}
       <Helmet>
         <script type="application/ld+json">{JSON.stringify(organizationSchema)}</script>
       </Helmet>
       <SeoKeywordsSection />
       <div className="min-h-screen bg-white pb-0">
-        {/* Inject custom CSS for search dropdown layering */}
         <style dangerouslySetInnerHTML={{ __html: searchDropdownStyle }} />
         <style dangerouslySetInnerHTML={{
           __html: `
-        /* Remove any gap between header and banner */
         header {
           box-shadow: none !important;
           margin-bottom: 0 !important;
@@ -342,25 +267,21 @@ export default function Index() {
           margin-bottom: 0 !important;
           border: none !important;
         }
-        /* Force no gap between elements */
         body {
           overflow-x: hidden;
         }
-        /* Ensure smooth scrolling for header transitions */
         html {
           scroll-behavior: smooth;
         }
-        /* Remove header space when header is hidden */
         .main-content {
           transition: padding-top 0.3s ease;
         }
-        /* Always keep Current Affairs header visible */
         header.current-affairs-header {
           top: 0 !important;
           position: fixed !important;
         }
       `}} />
-        {/* Mobile Bottom Navigation Bar */}
+        
         <nav className="fixed bottom-0 left-0 w-full bg-white border-t border-[#b8c0d8] z-50 flex md:hidden justify-around items-center py-1.5 shadow-2xl rounded-t-xl">
           <Link to="/hotels" className="flex flex-col items-center text-xs text-gray-700 hover:text-[#101c34] font-medium px-2">
             <HotelIcon className="w-6 h-6 mb-0.5" />
@@ -384,30 +305,21 @@ export default function Index() {
           </Link>
         </nav>
 
-        {/* Second Header + NavBar + HeroBanner (lookalike-header-gen style) */}
-        {/* <SecondTopHeader />
-        <SecondNavBar /> */}
-        {/* <SecondHeroBanner /> */}
-
-        {/* Video Section */}
         <div className="w-full px-4 py-4">
           <video autoPlay loop muted playsInline className="w-full rounded-xl object-cover" style={{ maxHeight: '550px' }} ref={(el) => { if (el) el.playbackRate = 0.7; }}>
             <source src={hotelVideo} type="video/mp4" />
           </video>
         </div>
 
-        {/* Event Announcement Banner */}
         <div className="bg-[#101c34] py-3 relative overflow-hidden cursor-pointer border-0 mt-0" onClick={() => window.open('https://theweddingrose.com', '_blank')}>
           <div className="container mx-auto">
             <div className="flex items-center justify-center">
               <div className="hidden md:flex items-center justify-center w-8 h-8 bg-white rounded-full mr-3">
                 <span className="text-[#101c34] font-bold text-lg">✦</span>
               </div>
-              {/* Desktop: Static centered text */}
               <p className="font-medium text-white text-center hidden md:block">
                A Unit of Kritika Wedding-n-Entertainment 
               </p>
-              {/* Mobile: Scrolling text */}
               <div className="overflow-hidden w-full md:hidden">
                 <div className="whitespace-nowrap animate-[scroll_15s_linear_infinite]">
                   <p className="font-medium text-white inline-block">
@@ -423,86 +335,13 @@ export default function Index() {
           </div>
         </div>
 
-        {/* Hero Section with Video Background */}
-        {false &&
-          <section className="relative flex items-center justify-center text-white overflow-visible hero-parallax md:h-screen">
-            {/* Video Background */}
-            <video
-              autoPlay
-              loop
-              muted
-              playsInline
-              className="absolute top-0 left-0 w-full h-full object-cover z-0"
-              src={activeVideo}
-            />
-            {/* Black Overlay for Readability */}
-            <div className="absolute top-0 left-0 w-full h-full bg-black/20 z-10 overflow-visible" />
-            {/* Content */}
-            <div className="container mx-auto text-center relative z-20 px-4">
-              <div className="max-w-4xl mx-auto">
-                <h2 className="text-5xl md:text-6xl font-bold mb-6 md:mb-8 mt-32 md:mt-40 leading-tight gold-highlight section-anim">
-                  <span
-                    className="bg-[#101c34] bg-clip-text text-transparent font-extrabold block"
-                    style={{
-                      WebkitTextStroke: '1px black',
-                      paintOrder: 'stroke fill',
-                    }}
-                  >
-                    Your concierge for Wedding and Event Designing
-                  </span>
-                </h2>
-                <p className="text-xl text-gray-200 mb-6 md:mb-8 leading-relaxed section-anim" style={{ textShadow: '1px 1px 2px rgba(0,0,0,0.5)' }}>
-                  Connect with premium hotels, stunning venues, and exceptional caterers
-                  across India's top destinations. Your perfect event starts here.
-                </p>
-                {/* Search Section (Premium Category Selector) */}
-                <section className={styles.categoryPanel}>
-                  <div className={styles.categoryTabs}>
-                    {/* Hotels and Resorts Card */}
-                    <Link to="/all-hotels" className={styles.categoryCard}>
-                      <img src="/icons/home.png" alt="Hotels and Resorts" className="w-16 h-16 mx-auto mb-3 object-contain" />
-                      <div className={styles.categoryTitle}>Hotels and Resorts</div>
-                    </Link>
-                    {/* Wedding & Event Planners Card */}
-                    <Link to="/vendors/event-planners" className={styles.categoryCard}>
-                      <img src="/icons/wedding-planner.png" alt="Wedding & Event Planners" className="w-16 h-16 mx-auto mb-3 object-contain" />
-                      <div className={styles.categoryTitle}>Wedding & Event Planners</div>
-                    </Link>
-                    {/* Premier Destinations Card */}
-                    <Link to="/premier-destinations-DL-UK" className={styles.categoryCard}>
-                      <img src="/icons/hotel.png" alt="Premier Destinations" className="w-16 h-16 mx-auto mb-3 object-contain" />
-                      <div className={styles.categoryTitle}>Premier Destinations</div>
-                    </Link>
-                  </div>
-                </section>
-                {/* END Search Section */}
-
-                {/* Enhanced Search Bar */}
-                <div className="mt-6 mb-10 md:mb-6 w-full relative">
-                  <EnhancedSearch
-                    className="hero-search"
-                    placeholder="Search hotels, venues, planners, and destinations..."
-                    onResultClick={(result) => {
-                      if (result.type === 'Hotel') {
-                        openHotelModal(result.hotel);
-                      }
-                      // You can add more specific actions for other result types here
-                      // For example, navigating to a vendor page:
-                      // if (result.type === 'Vendor' && result.link) {
-                      //   window.location.href = result.link;
-                      // }
-                    }}
-                  />
-                </div>
-                <div className="h-4 md:h-0"></div> {/* Extra spacing for mobile */}
-              </div>
-            </div>
-          </section>
-        }
         {/* Featured Wedding & Gifting Partners */}
         <FeaturedPartners />
 
-        {/* Next Section (normal flow, no transform) - Adjusted for search dropdown */}
+        {/* Testimonials Section */}
+        <Testimonials />
+
+        {/* Explore Premier Destinations */}
         <section className="py-8 md:py-16 px-4 bg-gray-50 relative z-10">
           <div className="container mx-auto">
             <div className="text-center mb-8">
@@ -562,7 +401,7 @@ export default function Index() {
           </div>
         </section>
 
-        {/* International Destinations Section */}
+        {/* International Destinations */}
         <section className="py-8 md:py-16 px-4 bg-gray-50 relative z-10">
           <div className="container mx-auto">
             <div className="text-center mb-8">
@@ -649,9 +488,7 @@ export default function Index() {
           </div>
         </section>
 
-        {/* Categories Section removed to eliminate mobile gap */}
-
-        {/* Featured Vendors (Popular Picks) */}
+        {/* Popular Picks */}
         <section className="py-16 md:py-20 bg-gradient-to-b from-white to-gray-50 overflow-y-hidden">
           <div className="container mx-auto">
             <div className="text-center mb-10 md:mb-14 px-4">
@@ -675,12 +512,11 @@ export default function Index() {
           </div>
         </section>
 
-        {/* Hotel Modal (Custom) */}
+        {/* Hotel Modal */}
         {showHotelModal && modalHotel && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
             <div className="bg-white rounded-lg p-6 max-w-lg w-full relative">
               <button
-              
                 className="absolute top-2 right-2 text-gray-500 hover:text-gray-800 text-xl font-bold"
                 onClick={closeHotelModal}
                 aria-label="Close"
@@ -794,7 +630,7 @@ export default function Index() {
                 Ready to Join Our Network?
               </h3>
               <p className="text-xl text-gray-600 mb-8">
-                Become part of India’s most trusted hospitality platform and
+                Become part of India's most trusted hospitality platform and
                 connect with thousands of event planners.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -820,7 +656,6 @@ export default function Index() {
 
         <GlobalInquiry />
 
-        {/* Sticky Footer CTA for mobile */}
         <div className="sticky-footer-cta md:hidden">
           <button className="cta-btn" onClick={() => window.location.href = '/vendor-registration'}>
             Register as Vendor

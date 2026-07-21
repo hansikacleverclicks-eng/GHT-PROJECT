@@ -13,6 +13,7 @@ import {
   Hotel,
   Home,
   ChevronRight,
+  Globe,
 } from 'lucide-react';
 import breadcrumbBg from '@/assets/breadcums.jpeg';
 

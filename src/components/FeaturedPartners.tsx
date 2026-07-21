@@ -1,30 +1,30 @@
 import { useState } from "react";
 
 const partners = [
-  {
-    name: "The Wedding Rose",
-    subtitle: "Wedding Planner",
-    tagline: "A Unit of Kritika Weddings & Entertainment",
-    logo: "/logos/weddingrose.png",
-    location: "New Delhi",
-    contactPerson: "Monica Dhyani",
-    phone: "8076885774",
-    email: "wedding16roses@gmail.com",
-    website: "https://theweddingrose.com",
-    number: "01",
-  },
-  {
-    name: "Danish Patisserie",
-    subtitle: "Bakery & Confectionery",
-    tagline: "Crafting sweetness for your special day",
-    logo: "/logos/danis.jpg",
-    location: "New Delhi",
-    contactPerson: "Monica Dhyani",
-    phone: "8076885774",
-    email: "wedding16roses@gmail.com",
-    website: "https://danishpatisserie.in",
-    number: "02",
-  },
+  // {
+  //   name: "The Wedding Rose",
+  //   subtitle: "Wedding Planner",
+  //   tagline: "A Unit of Kritika Weddings & Entertainment",
+  //   logo: "/logos/weddingrose.png",
+  //   location: "New Delhi",
+  //   contactPerson: "Monica Dhyani",
+  //   phone: "8076885774",
+  //   email: "wedding16roses@gmail.com",
+  //   website: "https://theweddingrose.com",
+  //   number: "01",
+  // },
+  // {
+  //   name: "Danish Patisserie",
+  //   subtitle: "Bakery & Confectionery",
+  //   tagline: "Crafting sweetness for your special day",
+  //   logo: "/logos/danis.jpg",
+  //   location: "New Delhi",
+  //   contactPerson: "Monica Dhyani",
+  //   phone: "8076885774",
+  //   email: "wedding16roses@gmail.com",
+  //   website: "https://danishpatisserie.in",
+  //   number: "02",
+  // },
 ];
 
 const FeaturedPartners = () => {

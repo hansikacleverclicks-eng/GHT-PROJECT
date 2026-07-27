@@ -273,7 +273,7 @@ const Footer = () => (
               Where Venue, Event &amp; Wedding Planners Unite — your trusted partner for every celebration.
             </p>
             <div className="gft-socials">
-              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="gft-soc">
+              <a href="https://www.facebook.com/profile.php?id=61591995456171" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="gft-soc">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="white">
                   <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
                 </svg>
@@ -283,7 +283,7 @@ const Footer = () => (
                   <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/>
                 </svg>
               </a>
-              <a href="https://www.instagram.com/globalhotelsandtourism/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="gft-soc">
+              <a href="https://www.instagram.com/global_hotelsandtourism/?hl=en" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="gft-soc">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
                   <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
@@ -325,7 +325,28 @@ const Footer = () => (
                   </svg>
                 </span>
                 <span className="gft-clabel">+91-8076885774 (WhatsApp)</span>
+              </a> 
+              
+              <a href="https://www.facebook.com/profile.php?id=61591995456171" target="_blank" rel="noopener noreferrer" className="gft-crow">
+                <span className="gft-cicon">
+                  <svg width="15" height="15" viewBox="0 0 24 24">
+                    <path className="fi" d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+                  </svg>
+                </span>
+                <span className="gft-clabel">Facebook</span>
               </a>
+
+              <a href="https://www.instagram.com/global_hotelsandtourism/?hl=en" target="_blank" rel="noopener noreferrer" className="gft-crow">
+                <span className="gft-cicon">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <rect className="si" x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                    <path className="si" d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                    <line className="si" x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+                  </svg>
+                </span>
+                <span className="gft-clabel">Instagram</span>
+              </a>
+
 
             </div>
           </div>

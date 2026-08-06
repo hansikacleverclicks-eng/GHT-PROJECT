@@ -2,20 +2,19 @@
 import { Link } from "react-router-dom";
 
 const navItems = [
-  { label: "Hotels & Venues", path: "/all-hotels", hasDropdown: true },
-  { label: "Vendors", path: "/vendors", hasDropdown: true },
-  { label: "Event Planners", path: "/vendors/event-planners", hasDropdown: false },
-  { label: "Premier Destinations", path: "/premier-destinations-DL-UK", hasDropdown: false },
-  { label: "Awards", path: "/awards", hasDropdown: false },
-  { label: "Current Affairs", path: "/current-affairs", hasDropdown: false },
-  { label: "Blogs", path: "/blogs", hasDropdown: false },
-  { label: "About Us", path: "/about", hasDropdown: false },
-  // { label: "+91-9810261007", path: "/inquiry", hasDropdown: false },
+  { label: "Hotels & Venues", path: "/all-hotels" },
+  { label: "Vendors", path: "/vendors" },
+  { label: "Event Planners", path: "/vendors/event-planners" },
+  { label: "Premier Destinations", path: "/premier-destinations-DL-UK" },
+  { label: "Awards", path: "/awards" },
+  { label: "Current Affairs", path: "/current-affairs" },
+  { label: "Blogs", path: "/blogs" },
+  { label: "About Us", path: "/about" },
 ];
 
 const SecondNavBar = () => {
   return (
-    <nav className="hidden md:block bg-background border-b border-border">
+    <nav className="hidden md:block bg-white border-b border-gray-200">
       <div className="container mx-auto px-4">
         <ul className="flex items-center justify-between">
           {navItems.map((item) => (
@@ -25,7 +24,6 @@ const SecondNavBar = () => {
                 className="flex items-center gap-1 px-2 lg:px-3 py-3 text-sm lg:text-[15px] font-medium text-gray-700 hover:text-[#101c34] transition-colors whitespace-nowrap"
               >
                 {item.label}
-                {item.hasDropdown && <ChevronDown className="w-3 h-3" />}
               </Link>
             </li>
           ))}

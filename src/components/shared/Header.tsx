@@ -1,6 +1,6 @@
 ﻿import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Search, ChevronDown, Menu, X } from 'lucide-react';
+import { Search, ChevronDown, Menu, X, Phone, Mail } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet';
 
 const cities = [
@@ -10,25 +10,28 @@ const cities = [
 ];
 
 const mobileNavItems = [
-  { label: "Hotels & Venues", path: "/all-hotels" },
-  { label: "Vendors", path: "/vendors" },
-  { label: "Event Planners", path: "/vendors/event-planners" },
-  { label: "Premier Destinations", path: "/premier-destinations-DL-UK" },
-  { label: "Awards", path: "/awards" },
-  { label: "Current Affairs", path: "/current-affairs" },
-  { label: "Blogs", path: "/blogs" },
+  { label: "Home", path: "/" },
   { label: "About Us", path: "/about" },
+  { label: "Weddings", path: "/weddings" },
+  { label: "Destinations", path: "/destinations" },
+  { label: "Venues", path: "/all-hotels" },
+  { label: "Services", path: "/services" },
+  { label: "Gallery", path: "/gallery" },
+  { label: "Blog", path: "/blogs" },
+  { label: "Contact Us", path: "/contact" },
 ];
 
 const navItems = [
-  { label: "Hotels & Venues", path: "/all-hotels" },
-  { label: "Vendors", path: "/vendors" },
-  { label: "Event Planners", path: "/vendors/event-planners" },
-  { label: "Premier Destinations", path: "/premier-destinations-DL-UK" },
-  { label: "Awards", path: "/awards" },
-  { label: "Current Affairs", path: "/current-affairs" },
-  { label: "Blogs", path: "/blogs" },
-  { label: "About Us", path: "/about" },
+  { label: "HOME", path: "/" },
+  { label: "ABOUT US", path: "/about" },
+  { label: "WEDDINGS", path: "/weddings" },
+  { label: "DESTINATIONS", path: "/destinations" },
+  { label: "GLOBAL HOTELS & TOURISM", path: "/" },
+  { label: "VENUES", path: "/all-hotels" },
+  { label: "SERVICES", path: "/services" },
+  { label: "GALLERY", path: "/gallery" },
+  { label: "BLOG", path: "/blogs" },
+  { label: "CONTACT US", path: "/contact" },
 ];
 
 const Header = () => {
@@ -39,6 +42,7 @@ const Header = () => {
   const [searchText, setSearchText] = useState("");
   const desktopCityRef = useRef(null);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const handler = (e) => {
@@ -62,13 +66,19 @@ const Header = () => {
     if (e.key === "Enter") handleSearch();
   };
 
+  const getLinkClass = (path, baseClass) => {
+    return location.pathname === path
+      ? `text-[#101c34] ${baseClass}`
+      : `text-gray-700 hover:text-[#101c34] ${baseClass}`;
+  };
+
   return (
     <>
-      {/* TOP HEADER */}
+      {/* TOP HEADER - Logo Left, Contact Right */}
       <header className="bg-white border-b border-gray-200 py-2">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between">
-            {/* Mobile Menu Button */}
+            {/* Mobile Menu */}
             <div className="flex md:hidden">
               <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
                 <SheetTrigger asChild>
@@ -103,16 +113,24 @@ const Header = () => {
               </Sheet>
             </div>
 
-            {/* Desktop Search Bar - LEFT SIDE */}
-            <div className="hidden md:flex items-center flex-1 max-w-lg">
+            {/* Logo - LEFT SIDE */}
+            <Link to="/" className="flex items-center gap-2 flex-shrink-0">
+              <img src="/bglogo.png" alt="GHT Logo" className="h-10" />
+              <div className="hidden sm:block">
+                <span className="text-lg font-bold text-gray-900 tracking-tight">Global Hotels & Tourism</span>
+              </div>
+            </Link>
+
+            {/* Desktop Search Bar - Center */}
+            <div className="hidden md:flex items-center flex-1 max-w-md mx-4">
               <div className="flex border border-gray-300 rounded overflow-visible w-full">
                 <div ref={desktopCityRef} className="relative flex-shrink-0">
                   <button
                     type="button"
-                    className="flex items-center gap-2 px-4 py-1.5 bg-white text-gray-700 text-sm border-r border-gray-300 min-w-[130px] justify-between hover:bg-gray-50"
+                    className="flex items-center gap-2 px-3 py-1.5 bg-white text-gray-700 text-sm border-r border-gray-300 min-w-[110px] justify-between hover:bg-gray-50"
                     onClick={() => setCityOpen(v => !v)}
                   >
-                    <span className="truncate">{selectedCity}</span>
+                    <span className="truncate text-xs">{selectedCity}</span>
                     <ChevronDown className={`w-3 h-3 flex-shrink-0 transition-transform ${cityOpen ? "rotate-180" : ""}`} />
                   </button>
                   {cityOpen && (
@@ -140,7 +158,7 @@ const Header = () => {
                   value={searchText}
                   onChange={(e) => setSearchText(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  className="px-4 py-1.5 text-sm bg-white text-gray-700 outline-none flex-1 min-w-[120px] placeholder:text-gray-400"
+                  className="px-3 py-1.5 text-sm bg-white text-gray-700 outline-none flex-1 min-w-[100px] placeholder:text-gray-400"
                   autoComplete="off"
                   autoCorrect="off"
                   spellCheck={false}
@@ -166,21 +184,25 @@ const Header = () => {
               </div>
             </div>
 
-            {/* Logo - CENTERED */}
-            <Link to="/" className="flex items-center gap-2 md:absolute md:left-1/2 md:transform md:-translate-x-1/2">
-              <img src="/bglogo.png" alt="GHT Logo" className="h-11" />
-              <div className="hidden sm:block">
-                <span className="text-lg font-bold text-gray-900 tracking-tight">Global Hotels & Tourism</span>
+            {/* Contact Info - RIGHT SIDE */}
+            <div className="hidden md:flex items-center gap-4 text-sm flex-shrink-0">
+              <div className="flex items-center gap-2 text-gray-600">
+                <Mail className="w-4 h-4" />
+                <span className="hidden lg:inline">info@globalhotelsandtourism.com</span>
               </div>
-            </Link>
-
-            {/* Join as Vendor - RIGHT SIDE */}
-            <div className="hidden md:flex items-center gap-4">
+              <div className="flex items-center gap-2 text-gray-600">
+                <Phone className="w-4 h-4" />
+                <span>+918449103104</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-gray-600">Follow Us:</span>
+                <a href="#" className="text-gray-600 hover:text-[#101c34] font-medium">in</a>
+              </div>
               <Link
-                to="/join-as-vendor"
+                to="/get-in-touch"
                 className="bg-[#101c34] text-white px-4 py-1.5 rounded text-sm font-medium hover:opacity-90 transition-opacity"
               >
-                Join as Vendor
+                Get In Touch
               </Link>
             </div>
 
@@ -192,8 +214,8 @@ const Header = () => {
               >
                 <Search className="w-5 h-5" />
               </button>
-              <Link to="/join-as-vendor" className="text-xs bg-[#101c34] text-white px-3 py-1 rounded">
-                Join
+              <Link to="/get-in-touch" className="text-xs bg-[#101c34] text-white px-3 py-1 rounded">
+                Contact
               </Link>
             </div>
           </div>
@@ -233,15 +255,18 @@ const Header = () => {
         </div>
       </header>
 
-      {/* BOTTOM NAVIGATION */}
+      {/* BOTTOM NAVIGATION - Centered */}
       <nav className="hidden md:block bg-white border-b border-gray-200">
         <div className="container mx-auto px-4">
-          <ul className="flex items-center justify-between">
+          <ul className="flex items-center justify-center gap-1">
             {navItems.map((item, index) => (
               <li key={index} className="flex-shrink-0">
                 <Link
                   to={item.path}
-                  className="flex items-center gap-1 px-2 lg:px-3 py-2 text-sm lg:text-[15px] font-medium text-gray-700 hover:text-[#101c34] transition-colors whitespace-nowrap"
+                  className={getLinkClass(
+                    item.path,
+                    'flex items-center gap-1 px-3 py-2 text-xs font-semibold text-gray-700 hover:text-[#101c34] transition-colors whitespace-nowrap uppercase tracking-wide'
+                  )}
                 >
                   {item.label}
                 </Link>

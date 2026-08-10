@@ -148,8 +148,8 @@ const SecondTopHeader = () => {
 
         <div className="relative z-10 container mx-auto px-6">
           
-          {/* ROW 1: Search + Contact */}
-          <div className="flex items-center justify-between py-3">
+          {/* ROW 1: Search + Contact - tighter padding */}
+          <div className="flex items-center justify-between py-1">
             {/* Search Bar */}
             <div className="hidden md:flex items-center flex-1 max-w-md">
               <div className="flex border border-white/10 rounded-full w-full bg-white/5 backdrop-blur-sm hover:bg-white/10 focus-within:border-[#c9a84c] focus-within:ring-4 focus-within:ring-[#c9a84c]/20 transition-all duration-300 relative">
@@ -293,8 +293,8 @@ const SecondTopHeader = () => {
             </div>
           )}
 
-          {/* ROW 2: Navigation + Logo - PERFECT CENTER */}
-          <div className="flex items-center justify-center py-5 border-t border-white/5 relative">
+          {/* ROW 2: Navigation + Logo - ZERO top padding, minimal bottom padding */}
+          <div className="flex items-center justify-center pt-0 pb-1 border-t border-white/5 relative">
             
             {/* Left Nav */}
             <div className="hidden md:flex items-center justify-start flex-1">
@@ -303,7 +303,7 @@ const SecondTopHeader = () => {
                   <Link
                     key={item.label}
                     to={item.path}
-                    className={`px-2.5 lg:px-3.5 py-2.5 text-xs lg:text-sm font-light transition-all duration-200 whitespace-nowrap ${getLinkClass(item.path)}`}
+                    className={`px-2.5 lg:px-3.5 py-2 text-xs lg:text-sm font-light transition-all duration-200 whitespace-nowrap ${getLinkClass(item.path)}`}
                   >
                     {item.label}
                   </Link>
@@ -311,17 +311,17 @@ const SecondTopHeader = () => {
               </nav>
             </div>
 
-            {/* Logo - CENTER */}
+            {/* Logo - CENTER - reduced margins on text */}
             <Link to="/" className="flex flex-col items-center group z-10 px-4">
               <img 
                 src="/bglogo.png" 
                 alt="GHT Logo" 
-                className="h-24 w-auto transition-transform duration-300 group-hover:scale-105 drop-shadow-[0_0_40px_rgba(201,168,76,0.2)]" 
+                className="h-20 w-auto transition-transform duration-300 group-hover:scale-105 drop-shadow-[0_0_40px_rgba(201,168,76,0.2)]" 
               />
-              <span className="text-base font-bold text-white tracking-[0.2em] mt-2 drop-shadow-[0_0_30px_rgba(201,168,76,0.15)]" style={{ fontFamily: "'Playfair Display', serif" }}>
+              <span className="text-base font-bold text-white tracking-[0.2em] mt-0.5 drop-shadow-[0_0_30px_rgba(201,168,76,0.15)]" style={{ fontFamily: "'Playfair Display', serif" }}>
                 GLOBAL HOTELS & TOURISM
               </span>
-              <span className="text-[11px] text-[#c9a84c] tracking-[0.3em] mt-1 font-light uppercase" style={{ fontFamily: "'Playfair Display', serif" }}>
+              <span className="text-[11px] text-[#c9a84c] tracking-[0.3em] mt-0 font-light uppercase" style={{ fontFamily: "'Playfair Display', serif" }}>
                 A Royal Affair
               </span>
             </Link>
@@ -333,7 +333,7 @@ const SecondTopHeader = () => {
                   <Link
                     key={item.label}
                     to={item.path}
-                    className={`px-2.5 lg:px-3.5 py-2.5 text-xs lg:text-sm font-light transition-all duration-200 whitespace-nowrap ${getLinkClass(item.path)}`}
+                    className={`px-2.5 lg:px-3.5 py-2 text-xs lg:text-sm font-light transition-all duration-200 whitespace-nowrap ${getLinkClass(item.path)}`}
                   >
                     {item.label}
                   </Link>

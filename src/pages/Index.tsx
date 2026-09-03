@@ -26,7 +26,6 @@ import SecondNavBar from '@/components/SecondNavBar';
 import SecondHeroBanner from '@/components/SecondHeroBanner';
 import FeaturedPartners from '@/components/FeaturedPartners';
 import Testimonials from '@/components/Testimonials';
-import hotelVideo from '../assets/video.mp4'
 
 // Add custom CSS for search dropdown layering
 const searchDropdownStyle = `
@@ -306,10 +305,12 @@ export default function Index() {
         </nav>
 
         <div className="w-full px-4 py-4">
-          <video autoPlay loop muted playsInline className="w-full rounded-xl object-cover" style={{ maxHeight: '550px' }} ref={(el) => { if (el) el.playbackRate = 0.7; }}>
-            <source src={hotelVideo} type="video/mp4" />
-          </video>
-        </div>
+  <img
+    src="/uttarakhand-wedding-banner.png"
+    alt="Uttarakhand Destination Wedding"
+    className="block w-full h-auto rounded-xl"
+  />
+</div>
 
         <div className="bg-[#101c34] py-3 relative overflow-hidden cursor-pointer border-0 mt-0" onClick={() => window.open('https://theweddingrose.com', '_blank')}>
           <div className="container mx-auto">

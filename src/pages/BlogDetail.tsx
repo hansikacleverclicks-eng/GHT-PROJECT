@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { Calendar, ArrowLeft, BookOpen, Tag, Home, ChevronRight } from 'lucide-react';
 import breadcrumbBg from '@/assets/breadcums.jpeg';
@@ -7,6 +7,47 @@ import { Badge } from '@/components/ui/badge';
 import type { WPBlog } from './Blogs';
 
 const BLOGS_API = 'https://globalhotelsandtourism.com/seo/wp-json/seo/v1/blogs';
+
+/**
+ * Blog content comes from WordPress and can contain either an HTML fragment,
+ * a complete HTML document, or HTML that has been escaped by the API.
+ * Extract only the article body so <html>/<head>/<title>/<meta> are never
+ * displayed as article text, while preserving normal rich-text formatting.
+ */
+const getBlogHtml = (content: string): string => {
+  const source = content.trim();
+  if (!source) return '';
+
+  const parse = (html: string) => new DOMParser().parseFromString(html, 'text/html');
+  let doc = parse(source);
+
+  // If the API returned escaped HTML, decode it once and parse it again.
+  const decoded = doc.body?.textContent?.trim() || '';
+  if (/&lt;\/?(?:!doctype|html|head|body|title|meta|h[1-6]|p|div|section|article|ul|ol|li|strong|em|a|img)/i.test(source) && decoded.includes('<')) {
+    doc = parse(decoded);
+  }
+
+  // A full document should contribute only its body to the blog article.
+  // For a normal fragment, DOMParser also places the fragment in body.
+  const body = doc.body;
+  if (!body) return '';
+
+  // Never allow executable/metadata-only elements from the CMS to enter the
+  // article content. The site's title/meta tags belong in the document head.
+  body.querySelectorAll('script, style, iframe, object, embed, meta, link, title, base').forEach((el) => el.remove());
+
+  // Remove inline event handlers and javascript: URLs from CMS HTML.
+  body.querySelectorAll<HTMLElement>('*').forEach((el) => {
+    Array.from(el.attributes).forEach((attr) => {
+      if (/^on/i.test(attr.name)) el.removeAttribute(attr.name);
+      if ((attr.name === 'href' || attr.name === 'src' || attr.name === 'xlink:href') && /^\s*javascript:/i.test(attr.value)) {
+        el.removeAttribute(attr.name);
+      }
+    });
+  });
+
+  return body.innerHTML;
+};
 
 export default function BlogDetail() {
   const { slug } = useParams<{ slug: string }>();
@@ -18,7 +59,6 @@ export default function BlogDetail() {
   useEffect(() => {
     if (!slug) return;
     setLoading(true);
-    // Fetch all blogs and find the one matching the slug
     fetch(BLOGS_API)
       .then(res => {
         if (!res.ok) throw new Error('Failed to fetch');
@@ -38,10 +78,7 @@ export default function BlogDetail() {
   }, [slug]);
 
   const getImage = (b: WPBlog) => b.featured_image || '/ght_logo.png';
-
   const getCategory = (b: WPBlog) => b.category || 'Blog';
-
-  // tags is a comma-separated string from the API
   const getTags = (b: WPBlog): string[] =>
     b.tags ? b.tags.split(',').map(t => t.trim()).filter(Boolean) : [];
 
@@ -86,7 +123,6 @@ export default function BlogDetail() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#f0f2f7] via-white to-blue-50">
-      {/* Breadcrumb Hero Banner */}
       <div className="relative w-full h-64 md:h-80 overflow-hidden">
         <img src={breadcrumbBg} alt={blog.title} className="absolute inset-0 w-full h-full object-cover object-center" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#101c34]/90 via-[#101c34]/55 to-black/25" />
@@ -103,14 +139,11 @@ export default function BlogDetail() {
           <h1 className="text-2xl md:text-4xl font-extrabold text-white leading-tight line-clamp-2" style={{ fontFamily: 'var(--font-head)', color: '#ffffff' }}>
             {blog.title}
           </h1>
-          {blog.category && (
-            <p className="text-white/70 mt-2 text-sm md:text-base">{blog.category}</p>
-          )}
+          {blog.category && <p className="text-white/70 mt-2 text-sm md:text-base">{blog.category}</p>}
         </div>
       </div>
 
       <article className="container mx-auto px-4 py-8 max-w-4xl">
-        {/* Hero Image */}
         <div className="relative mb-8 rounded-2xl overflow-hidden shadow-lg">
           <img
             src={getImage(blog)}
@@ -121,7 +154,6 @@ export default function BlogDetail() {
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
         </div>
 
-        {/* Header */}
         <header className="mb-8">
           <div className="flex flex-wrap items-center gap-3 mb-4">
             <Badge variant="outline" className="bg-[#f0f2f7] text-[#101c34] border-[#b8c0d8]">
@@ -132,7 +164,7 @@ export default function BlogDetail() {
           {blog.excerpt && (
             <p
               className="text-lg md:text-xl text-gray-600 mb-6 leading-relaxed"
-              dangerouslySetInnerHTML={{ __html: blog.excerpt }}
+              dangerouslySetInnerHTML={{ __html: getBlogHtml(blog.excerpt) }}
             />
           )}
 
@@ -157,16 +189,13 @@ export default function BlogDetail() {
           </div>
         </header>
 
-        {/* Content — plain text with paragraph breaks */}
         {blog.content && (
-          <div className="prose prose-lg prose-headings:text-gray-900 prose-headings:font-bold prose-p:text-gray-700 prose-p:leading-relaxed prose-li:text-gray-700 prose-strong:text-gray-900 prose-a:text-[#101c34] hover:prose-a:text-[#101c34] max-w-none mb-8">
-            {blog.content.split(/\r?\n\r?\n/).map((para, i) => (
-              <p key={i}>{para.trim()}</p>
-            ))}
-          </div>
+          <div
+            className="prose prose-lg prose-headings:text-gray-900 prose-headings:font-bold prose-p:text-gray-700 prose-p:leading-relaxed prose-li:text-gray-700 prose-strong:text-gray-900 prose-a:text-[#101c34] hover:prose-a:text-[#101c34] max-w-none mb-8"
+            dangerouslySetInnerHTML={{ __html: getBlogHtml(blog.content) }}
+          />
         )}
 
-        {/* Tags */}
         {getTags(blog).length > 0 && (
           <div className="mb-8">
             <div className="flex items-center gap-2 mb-3">
@@ -183,7 +212,6 @@ export default function BlogDetail() {
           </div>
         )}
 
-        {/* Back button */}
         <div className="text-center mt-12 mb-4">
           <Button
             onClick={() => navigate('/blogs')}

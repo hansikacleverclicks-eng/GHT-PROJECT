@@ -36,8 +36,15 @@ const BlogPost = () => {
 
 			setBlogPost(post);
 
+			// Prefer the real content already fetched from your database (via getCurrentAffairs)
+			if (post.content && post.content.trim() && post.content !== 'Full content will be loaded from markdown files') {
+				setContent(post.content);
+				setLoading(false);
+				return;
+			}
+
 			try {
-				// First try to get from localStorage (dynamically added content)
+				// Check localStorage (dynamically added content)
 				const localContent = localStorage.getItem(`blog_${slug}`);
 				if (localContent) {
 					setContent(localContent);
@@ -45,11 +52,15 @@ const BlogPost = () => {
 					return;
 				}
 
-				// Fallback to markdown files
+				// Fallback to markdown files — guard against the SPA catch-all
+				// returning index.html (200 OK) when the .md file doesn't exist
 				const response = await fetch(`/blogs/${slug}.md`);
-				if (response.ok) {
-					const markdownContent = await response.text();
-					setContent(markdownContent);
+				const contentType = response.headers.get('content-type') || '';
+				const bodyText = response.ok ? await response.text() : '';
+				const looksLikeHtmlFallback = bodyText.trim().startsWith('<!DOCTYPE') || contentType.includes('text/html');
+
+				if (response.ok && !looksLikeHtmlFallback) {
+					setContent(bodyText);
 				} else {
 					setError('Blog content not available');
 				}

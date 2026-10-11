@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import founderPhoto from '../assets/yogesh-khantwal.jpg';
 import { Link } from 'react-router-dom';
 import {
   ChevronDown,
@@ -55,12 +54,12 @@ const pillars = [
 ];
 
 const team = [
-  {
-    name: 'Mr. Yogesh Khantwal',
-    title: 'Founder',
-    bio: 'Backed by over 25 years of experience, our team has consistently delivered exceptional results across the hospitality and events industry. Over the years, we have built a strong foundation rooted in trust, consistency, and a deep understanding of what truly creates memorable experiences. Our journey reflects a commitment to quality and long-term relationships.',
-    photo: founderPhoto,
-  },
+  { name: 'Rajiv Sharma',  title: 'Founder & CEO',          role: 'Hospitality Visionary',  bio: '20+ years in luxury hospitality across India and Southeast Asia. Former GM at Taj Hotels.',                                         initials: 'RS' },
+  { name: 'Priya Mehta',   title: 'Co-Founder & COO',       role: 'Operations & Strategy',  bio: 'Ex-IHG executive with deep expertise in hotel operations and strategic partnerships.',                                              initials: 'PM' },
+  { name: 'Arjun Kapoor',  title: 'Head of Partnerships',   role: 'Vendor Relations',       bio: 'Brings 15 years of experience building hospitality networks across Tier-1 and Tier-2 cities.',                                    initials: 'AK' },
+  { name: 'Sunita Rao',    title: 'Head of Marketing',      role: 'Brand & Digital',        bio: 'Digital marketing strategist with a proven track record in travel and luxury lifestyle brands.',                                    initials: 'SR' },
+  { name: 'Amit Verma',    title: 'CTO',                    role: 'Technology & Product',   bio: 'Full-stack architect who previously built discovery platforms for travel companies in India and the UAE.',                          initials: 'AV' },
+  { name: 'Neha Gupta',    title: 'Head of Client Success', role: 'Customer Experience',    bio: 'Passionate about turning first-time users into lifelong advocates through exceptional service journeys.',                           initials: 'NG' },
 ];
 
 const faqs = [
@@ -290,21 +289,20 @@ const About = () => {
             </p>
           </div>
 
-          <div className="max-w-4xl mx-auto">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {team.map((member) => (
               <div
                 key={member.name}
-                className="bg-white border border-[#b8c0d8]/40 rounded-2xl p-8 md:p-10 flex flex-col md:flex-row gap-8 items-center md:items-start shadow-sm hover:shadow-xl hover:border-[#101c34]/30 transition-all duration-300"
+                className="group bg-white border border-[#b8c0d8]/40 rounded-2xl p-6 flex gap-5 items-start shadow-sm hover:shadow-xl hover:border-[#101c34]/30 hover:-translate-y-1 transition-all duration-300"
               >
-                <img
-                  src={member.photo}
-                  alt={member.name}
-                  className="w-40 h-40 rounded-2xl object-cover flex-shrink-0 shadow-lg"
-                />
-                <div className="text-center md:text-left">
-                  <h3 className="font-bold text-[#101c34] text-2xl leading-tight">{member.name}</h3>
-                  <p className="text-[#2a3f6b] text-base font-semibold mt-1 mb-4 uppercase tracking-wide">{member.title}</p>
-                  <p className="text-gray-500 text-base leading-relaxed">{member.bio}</p>
+                <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#101c34] to-[#2a3f6b] text-white flex items-center justify-center flex-shrink-0 font-bold text-base shadow-lg">
+                  {member.initials}
+                </div>
+                <div>
+                  <h3 className="font-bold text-[#101c34] text-base leading-tight">{member.name}</h3>
+                  <p className="text-[#2a3f6b] text-sm font-semibold mt-0.5">{member.title}</p>
+                  <p className="text-gray-400 text-xs mb-2">{member.role}</p>
+                  <p className="text-gray-500 text-sm leading-relaxed">{member.bio}</p>
                 </div>
               </div>
             ))}

@@ -172,17 +172,27 @@ export default defineConfig(() => ({
     host: "::",
     port: 8080,
     proxy: {
-      '/api': {
-        target: 'http://localhost:3000',
-        changeOrigin: true,
-        secure: false,
-      },
-      '/backend': {
-        target: 'http://localhost:8000',
-        changeOrigin: true,
-        secure: false,
+        '/api': {
+          target: 'http://localhost:3000',
+          changeOrigin: true,
+          secure: false,
+        },
+        '/backend': {
+          target: 'https://globalhotelsandtourism.com',
+          changeOrigin: true,
+          secure: true,
+        },
+        '^/(blogs|vendors|vendor-images|current-affairs|awards)/.+\\.(png|jpe?g|webp|gif|avif|svg)$': {
+          target: 'https://globalhotelsandtourism.com',
+          changeOrigin: true,
+          secure: true,
+        },
+        '/seo/wp-content': {
+          target: 'https://globalhotelsandtourism.com',
+          changeOrigin: true,
+          secure: true,
+        },
       }
-    }
   },
   plugins: [
     react(),

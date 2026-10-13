@@ -24,7 +24,7 @@ import GlobalInquiry from './GlobalInquiry';
 import SecondTopHeader from '@/components/SecondTopHeader';
 import SecondNavBar from '@/components/SecondNavBar';
 import SecondHeroBanner from '@/components/SecondHeroBanner';
-import FeaturedPartners from '@/components/FeaturedPartners';
+import ProcessSection from '@/components/ProcessSection';
 import Testimonials from '@/components/Testimonials';
 
 // Add custom CSS for search dropdown layering
@@ -305,39 +305,34 @@ export default function Index() {
         </nav>
 
         <div className="w-full px-4 py-4">
-  <img
-    src="/uttarakhand-wedding-banner.png"
-    alt="Uttarakhand Destination Wedding"
-    className="block w-full h-auto rounded-xl"
-  />
-</div>
-
-        <div className="bg-[#101c34] py-3 relative overflow-hidden cursor-pointer border-0 mt-0" onClick={() => window.open('https://theweddingrose.com', '_blank')}>
-          <div className="container mx-auto">
-            <div className="flex items-center justify-center">
-              <div className="hidden md:flex items-center justify-center w-8 h-8 bg-white rounded-full mr-3">
-                <span className="text-[#101c34] font-bold text-lg">✦</span>
-              </div>
-              <p className="font-medium text-white text-center hidden md:block">
-               A Unit of Kritika Wedding-n-Entertainment 
-              </p>
-              <div className="overflow-hidden w-full md:hidden">
-                <div className="whitespace-nowrap animate-[scroll_15s_linear_infinite]">
-                  <p className="font-medium text-white inline-block">
-                    A Unit of Kritika Wedding-n-Entertainment 
-                  </p>
-                  <span className="inline-block px-4">•</span>
-                  <p className="font-medium text-white inline-block">
-             A Unit of Kritika Wedding-n-Entertainment
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
+          <img
+            src="/assets/GHT-Banner-NEW.jpg"
+            alt="Global Hotels & Tourism"
+            className="w-full rounded-xl object-cover"
+            style={{ maxHeight: '550px' }}
+          />
         </div>
 
-        {/* Featured Wedding & Gifting Partners */}
-        <FeaturedPartners />
+        <div className="w-full px-4 py-2">
+          <img
+            src="/assets/GHT-Ribbon-Banner.jpg"
+            alt="Global Hotels & Tourism"
+            className="w-full object-cover"
+            style={{ height: 'auto', maxHeight: '262px' }}
+          />
+        </div>
+
+        <div className="w-full px-4 py-6">
+          <img
+            src="/assets/our-services-banner.jpg"
+            alt="Our Services - Global Hotels & Tourism"
+            className="w-full object-cover rounded-xl"
+            style={{ height: 'auto' }}
+          />
+        </div>
+
+        {/* Our Process */}
+        <ProcessSection />
 
         {/* Testimonials Section */}
         <Testimonials />

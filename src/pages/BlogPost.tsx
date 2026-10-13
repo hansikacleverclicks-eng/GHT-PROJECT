@@ -34,7 +34,7 @@ const BlogPost = () => {
 				return;
 			}
 
-			setBlogPost(post);
+			setBlogPost(post);co
 
 			try {
 				// First try to get from localStorage (dynamically added content)

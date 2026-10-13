@@ -207,11 +207,11 @@ const SecondTopHeader = () => {
             <div className="hidden md:flex items-center gap-5 text-sm">
               <div className="flex items-center gap-2.5 text-gray-400 hover:text-[#c9a84c] transition-colors">
                 <Mail className="w-4 h-4" />
-                <span className="hidden xl:inline">info@globalhotelsandtourism.com</span>
+                <span className="hidden xl:inline">wedding16roses@gmail.com</span>
               </div>
               <div className="flex items-center gap-2.5 text-gray-400 hover:text-[#c9a84c] transition-colors">
                 <Phone className="w-4 h-4" />
-                <span>+91 8449 103 104</span>
+                <span>+91-9810261007</span>
               </div>
               <Link
                 to="/get-in-touch"

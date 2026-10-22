@@ -50,7 +50,7 @@ const testimonials: Testimonial[] = [
     bride: "Ms. Jasleen Kaur & Mr. Bobby Duggal",
     date: "Wedding: 22nd July 2026",
     venue: "Hyatt Centric, Janakpuri",
-    content: "We had a wonderful experience with Global Hotels and Tourism for our wedding at Hyatt Centric, Janakpuri. The team managed everything professionally and helped us plan a beautiful celebration within our budget. Highly recommended for the **best wedding planning** services and **top wedding planning on a budget**. Thank you for making our special day memorable!",
+    content: "Our wedding at Hyatt Centric, Janakpuri, was a truly memorable experience with Global Hotels and Tourism. The team handled every detail professionally and helped us create a beautiful celebration within our budget. Highly recommended for the **best wedding planning** services and **top wedding planning on a budget**. Thank you for making our special day so wonderful!",
   },
   {
     id: 6,
@@ -59,7 +59,7 @@ const testimonials: Testimonial[] = [
     bride: "Ms. Harnoor & Mr. Arpan",
     date: "Sagan: 20th September 2026",
     venue: "ITC Welcom Dwarka",
-    content: "We had a wonderful experience with Global Hotels and Tourism for our Sagan ceremony at ITC Welcom Dwarka. The team managed everything professionally and helped us plan a beautiful celebration within our budget. Highly recommended for the **best wedding planning** services and **top wedding planning on a budget**. Thank you for making our special occasion memorable!",
+    content: "Celebrating our Sagan ceremony at ITC Welcom Dwarka with Global Hotels and Tourism was a wonderful experience. The team ensured everything was organised smoothly and helped us create a beautiful celebration within our budget. Highly recommended for the **best wedding planning** services and **top wedding planning on a budget**. Thank you for making our special occasion truly memorable!",
   },
 ];
 

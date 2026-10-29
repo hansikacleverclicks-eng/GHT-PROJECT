@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 interface Testimonial {
   id: number;
@@ -63,6 +63,8 @@ const testimonials: Testimonial[] = [
   },
 ];
 
+const AUTO_PLAY_MS = 7000;
+
 // Turns **text** into bold text
 const renderContent = (text: string) =>
   text.split(/(\*\*[^*]+\*\*)/g).map((part, i) =>
@@ -75,8 +77,53 @@ const renderContent = (text: string) =>
     )
   );
 
+// 2 cards per slide on tablets/desktop, 1 on phones
+const usePerView = () => {
+  const [perView, setPerView] = useState(1);
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 768px)');
+    const update = () => setPerView(mq.matches ? 2 : 1);
+    update();
+    mq.addEventListener('change', update);
+    return () => mq.removeEventListener('change', update);
+  }, []);
+  return perView;
+};
+
 const Testimonials = () => {
   const [expanded, setExpanded] = useState<Record<number, boolean>>({});
+  const [page, setPage] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const perView = usePerView();
+  const touchStartX = useRef<number | null>(null);
+
+  const pages = Math.ceil(testimonials.length / perView);
+  const anyExpanded = Object.values(expanded).some(Boolean);
+
+  // Keep the current page valid when the screen size changes
+  useEffect(() => {
+    setPage((p) => Math.min(p, pages - 1));
+  }, [pages]);
+
+  const goTo = useCallback((p: number) => setPage(((p % pages) + pages) % pages), [pages]);
+
+  // Auto-advance (stops while hovering, or while someone is reading an expanded card)
+  useEffect(() => {
+    if (paused || anyExpanded || pages < 2) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const t = setInterval(() => setPage((p) => (p + 1) % pages), AUTO_PLAY_MS);
+    return () => clearInterval(t);
+  }, [paused, anyExpanded, pages]);
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+  const onTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null) return;
+    const dx = e.changedTouches[0].clientX - touchStartX.current;
+    touchStartX.current = null;
+    if (Math.abs(dx) > 50) goTo(page + (dx < 0 ? 1 : -1));
+  };
 
   return (
     <section className="py-20 px-4 bg-[#f0f2f7]">
@@ -98,63 +145,115 @@ const Testimonials = () => {
           </p>
         </div>
 
-        {/* Testimonials Grid */}
-        <div className="grid md:grid-cols-2 gap-8">
-          {testimonials.map((testimonial) => {
-            const isOpen = !!expanded[testimonial.id];
-            return (
-              <div
-                key={testimonial.id}
-                className="bg-white rounded-3xl p-8 shadow-lg border border-[#b8c0d8]/30 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1"
+        {/* Slider */}
+        <div
+          role="region"
+          aria-roledescription="carousel"
+          aria-label="Client testimonials"
+          onMouseEnter={() => setPaused(true)}
+          onMouseLeave={() => setPaused(false)}
+          onTouchStart={onTouchStart}
+          onTouchEnd={onTouchEnd}
+        >
+          <div className="overflow-hidden -mx-4 px-0 py-6 -my-6">
+            <div
+              className="flex items-stretch transition-transform duration-700 ease-in-out"
+              style={{ transform: `translateX(-${page * 100}%)` }}
+            >
+              {testimonials.map((testimonial, index) => {
+                const isOpen = !!expanded[testimonial.id];
+                const visible = Math.floor(index / perView) === page;
+                return (
+                  <div
+                    key={testimonial.id}
+                    className="shrink-0 grow-0 px-4"
+                    style={{ flexBasis: `${100 / perView}%` }}
+                    aria-hidden={!visible}
+                  >
+                    <div className="h-full bg-white rounded-3xl p-8 shadow-lg border border-[#b8c0d8]/30 hover:shadow-2xl transition-shadow duration-300 flex flex-col">
+                      {/* Stars */}
+                      <div className="flex items-center gap-1 mb-4">
+                        {[...Array(5)].map((_, i) => (
+                          <svg key={i} className="w-5 h-5 text-[#c8a96e] fill-current" viewBox="0 0 20 20">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                          </svg>
+                        ))}
+                      </div>
+
+                      {/* Content */}
+                      <p className={`text-gray-600 text-sm leading-relaxed mb-5 italic ${isOpen ? '' : 'line-clamp-6'}`}>
+                        "{renderContent(testimonial.content)}"
+                      </p>
+
+                      {/* Read More button */}
+                      <button
+                        onClick={() => setExpanded((prev) => ({ ...prev, [testimonial.id]: !prev[testimonial.id] }))}
+                        tabIndex={visible ? 0 : -1}
+                        className="self-start text-[#101c34] text-xs font-semibold hover:text-[#2a3f6b] transition-colors mb-4"
+                      >
+                        {isOpen ? 'Show Less ↑' : 'Read Full Testimonial →'}
+                      </button>
+
+                      {/* Divider */}
+                      <div className="h-px bg-[#b8c0d8]/40 mb-4 mt-auto" />
+
+                      {/* Client Info */}
+                      <div>
+                        <h4 className="font-bold text-[#101c34]">{testimonial.name}</h4>
+                        {testimonial.subtitle && <p className="text-gray-400 text-xs">{testimonial.subtitle}</p>}
+                        {testimonial.bride && <p className="text-gray-400 text-xs">{testimonial.bride}</p>}
+                        {testimonial.venue && <p className="text-gray-400 text-xs">{testimonial.venue}</p>}
+                        <p className="text-gray-300 text-xs mt-1">{testimonial.date}</p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Controls */}
+          {pages > 1 && (
+            <div className="flex items-center justify-center gap-5 mt-10">
+              <button
+                onClick={() => goTo(page - 1)}
+                aria-label="Previous testimonials"
+                className="w-10 h-10 rounded-full border border-[#101c34]/20 bg-white text-[#101c34] flex items-center justify-center hover:bg-[#101c34] hover:text-white transition-colors"
               >
-                {/* Stars */}
-                <div className="flex items-center gap-1 mb-4">
-                  {[...Array(5)].map((_, i) => (
-                    <svg key={i} className="w-5 h-5 text-[#c8a96e] fill-current" viewBox="0 0 20 20">
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
-                  ))}
-                </div>
+                <svg className="w-4 h-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12.5 4.5 7 10l5.5 5.5" />
+                </svg>
+              </button>
 
-                {/* Content */}
-                <p
-                  className={`text-gray-600 text-sm leading-relaxed mb-5 italic ${isOpen ? '' : 'line-clamp-6'}`}
-                >
-                  "{renderContent(testimonial.content)}"
-                </p>
-
-                {/* Read More button */}
-                <button
-                  onClick={() => setExpanded((prev) => ({ ...prev, [testimonial.id]: !prev[testimonial.id] }))}
-                  className="text-[#101c34] text-xs font-semibold hover:text-[#2a3f6b] transition-colors mb-4"
-                >
-                  {isOpen ? 'Show Less ↑' : 'Read Full Testimonial →'}
-                </button>
-
-                {/* Divider */}
-                <div className="h-px bg-[#b8c0d8]/40 mb-4" />
-
-                {/* Client Info */}
-                <div>
-                  <h4 className="font-bold text-[#101c34]">{testimonial.name}</h4>
-                  {testimonial.subtitle && (
-                    <p className="text-gray-400 text-xs">{testimonial.subtitle}</p>
-                  )}
-                  {testimonial.bride && (
-                    <p className="text-gray-400 text-xs">{testimonial.bride}</p>
-                  )}
-                  {testimonial.venue && (
-                    <p className="text-gray-400 text-xs">{testimonial.venue}</p>
-                  )}
-                  <p className="text-gray-300 text-xs mt-1">{testimonial.date}</p>
-                </div>
+              <div className="flex items-center gap-2">
+                {Array.from({ length: pages }).map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => goTo(i)}
+                    aria-label={`Go to slide ${i + 1}`}
+                    aria-current={i === page}
+                    className={`h-2 rounded-full transition-all duration-300 ${
+                      i === page ? 'w-6 bg-[#101c34]' : 'w-2 bg-[#101c34]/25 hover:bg-[#101c34]/50'
+                    }`}
+                  />
+                ))}
               </div>
-            );
-          })}
+
+              <button
+                onClick={() => goTo(page + 1)}
+                aria-label="Next testimonials"
+                className="w-10 h-10 rounded-full border border-[#101c34]/20 bg-white text-[#101c34] flex items-center justify-center hover:bg-[#101c34] hover:text-white transition-colors"
+              >
+                <svg className="w-4 h-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M7.5 4.5 13 10l-5.5 5.5" />
+                </svg>
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Bottom decorative */}
-        <div className="flex items-center justify-center gap-3 mt-16">
+        <div className="flex items-center justify-center gap-3 mt-12">
           <div className="h-px w-16 bg-gradient-to-r from-transparent to-[#101c34]/20" />
           <div className="w-2 h-2 rounded-full bg-[#101c34]/20" />
           <div className="h-px w-16 bg-gradient-to-l from-transparent to-[#101c34]/20" />

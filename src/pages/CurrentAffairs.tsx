@@ -325,30 +325,7 @@ const CurrentAffairs = () => {
 				</div>
 			</section>
 
-			{/* Newsletter Signup */}
-			<section className="py-8 md:py-16 px-4 bg-white/60">
-				<div className="container mx-auto text-center">
-					<div className="max-w-2xl mx-auto bg-white rounded-xl shadow-sm p-6 md:p-8">
-						<h3 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2 md:mb-4">Stay Updated</h3>
-						<p className="text-base md:text-lg text-gray-600 mb-6 md:mb-8">
-							Get the latest news and trends delivered to your inbox.
-						</p>
-						<div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-							<Input
-								type="email"
-								placeholder="Enter your email"
-								className="flex-1"
-							/>
-							<Button className="bg-gradient-to-r from-[#101c34] to-[#2a3f6b] hover:bg-[#0d1829] px-4 md:px-8 whitespace-nowrap transition-all hover:shadow-md">
-								Subscribe
-							</Button>
-						</div>
-						<p className="text-xs md:text-sm text-gray-500 mt-3">
-							No spam, unsubscribe anytime. Read our privacy policy.
-						</p>
-					</div>
-				</div>
-			</section>
+			
 
 
 		</div>

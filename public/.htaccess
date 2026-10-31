@@ -1,6 +1,9 @@
 # Generated .htaccess for SPA routing, compression, and caching
 # Place this file in the public/ directory on your Apache server (document root)
 
+Redirect 301 /allcities /
+Redirect 301 /AllCities /
+
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /

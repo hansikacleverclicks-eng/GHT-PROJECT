@@ -15,8 +15,6 @@ function resolveSlug(pathname: string): string {
     '/awards':                        '/awards',
     '/current-affairs':               '/current-affairs',
     '/blogs':                         '/blogs',
-    '/AllCities':                     '/global-page',
-    '/allcities':                     '/global-page',
     '/premier-destinations-DL-UK':    '/global-page',
     '/join-as-vendor':                '/global-page',
     '/vendor-registration':           '/global-page',

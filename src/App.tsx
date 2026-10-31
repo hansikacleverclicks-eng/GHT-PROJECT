@@ -6,7 +6,6 @@ import AllHotels from './pages/AllHotels';
 import AllVendors from './pages/AllVendors';
 import AddBlog from './pages/AddBlog';
 import EventPlanners from './pages/EventPlanners';
-import AllCities from './pages/AllCities';
 import CityPage from './pages/CityPage';
 import Awards from './pages/Awards';
 import VendorProfile from './pages/VendorProfile';
@@ -62,8 +61,8 @@ function AppContent() {
           <Route path="/vendors" element={<AllVendors />} />
           <Route path="/vendor/:id" element={<VendorProfile />} />
           <Route path="/vendors/event-planners" element={<EventPlanners />} />
-          <Route path="/AllCities" element={<AllCities />} />
-          <Route path="/allcities" element={<AllCities />} />
+          <Route path="/AllCities" element={<Navigate to="/" replace />} />
+          <Route path="/allcities" element={<Navigate to="/" replace />} />
           <Route path="/city/:slug" element={<CityPage />} />
           <Route path="/parent-company/:parentCompanySlug" element={<ParentCompanyHotels />} />
           <Route path="/city-hotels/:citySlug" element={<CityHotels />} />
